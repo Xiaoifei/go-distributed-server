@@ -5,23 +5,22 @@ import (
 	"fmt"
 	stdlog "log"
 
-	"xiaoifei.top/log"
 	"xiaoifei.top/registry"
+	"xiaoifei.top/separation"
 	"xiaoifei.top/service"
 )
 
 func main() {
-	log.Run("./distributed.log")
-	host, port := "localhost", "4000"
+	host, port := "localhost", "6000"
 	ctx, err := service.Start(
 		context.Background(),
 		host,
 		port,
 		registry.Registration{
-			ServiceName: registry.LogService,
+			ServiceName: registry.SeperationService,
 			ServiceURL:  fmt.Sprintf("http://%s:%s", host, port),
 		},
-		log.RegisterHandelers,
+		separation.RegisterHandlers,
 	)
 	if err != nil {
 		stdlog.Fatalln(err)

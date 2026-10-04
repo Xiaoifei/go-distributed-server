@@ -30,6 +30,10 @@ func startService(ctx context.Context, serviceName registry.ServiceName, host, p
 		err := server.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Printf("服务异常: %v", err)
+			err := registry.ShutdownService(fmt.Sprintf("http://%s:%s", host, port))
+			if err != nil {
+				log.Println(err)
+			}
 			cancel()
 		}
 	}()
@@ -49,6 +53,11 @@ func startService(ctx context.Context, serviceName registry.ServiceName, host, p
 			if err := server.Close(); err != nil {
 				log.Printf("强制关闭失败: %v", err)
 			}
+		}
+
+		err := registry.ShutdownService(fmt.Sprintf("http://%s:%s", host, port))
+		if err != nil {
+			log.Println(err)
 		}
 		cancel()
 	}()
